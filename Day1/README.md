@@ -1,197 +1,164 @@
-# Day 1 – Environment Setup and RTL Workshop Initialization
-
-## Module 1: Development Environment Setup
-
----
+# Day 1 – RTL Design and Simulation Basics
 
 ## Objective
 
-The objective of Day 1 was to prepare the Linux development environment required for the RTL Design and Synthesis Workshop. This included installing essential tools, practicing Linux terminal commands, creating the workspace, and downloading the workshop repository from GitHub.
+The objective of Day 1 was to understand the basic RTL design flow, simulation process, synthesis flow, and the tools used for digital circuit design and verification.
 
 ---
 
-## Software Used
+## Tools Used
 
 - Ubuntu Linux
 - Git
 - GitHub
 - Icarus Verilog
 - GTKWave
+- Yosys
 
 ---
 
-# Activity 1: Installing Icarus Verilog
+## Concepts Learned
 
-## Objective
+- Introduction to RTL Design
+- Verilog Design
+- Testbench
+- RTL Simulation
+- Waveform Analysis
+- RTL Synthesis
+- Standard Cell Library
+- Gate-Level Netlist
 
-Icarus Verilog is an open-source Verilog compiler and simulator used to compile and simulate digital hardware designs.
+---
 
-### Installation Command
+
+
+---
+
+## Design
+
+A **Design** is the Verilog code that implements the required digital functionality according to the given specifications.
+
+---
+
+## Testbench
+
+A **Testbench** is used to apply different input test cases (stimulus) to the design and verify the generated outputs.
+
+**Note:** A testbench does not have primary inputs or primary outputs.
+
+---
+
+## RTL Simulation
+
+RTL simulation is performed to verify whether the design behaves according to the expected functionality.
+
+**Simulation Tool:** Icarus Verilog
+
+Simulation Flow:
+
+```
+Verilog Design
+       │
+       ▼
+Icarus Verilog
+       │
+       ▼
+VCD File
+       │
+       ▼
+GTKWave
+```
+
+---
+
+## RTL Synthesis
+
+RTL synthesis converts the behavioral Verilog code into a gate-level netlist using a standard cell library.
+
+**Synthesis Tool:** Yosys
+
+Synthesis Flow:
+
+```
+RTL Design
+      │
+      ▼
+Yosys
+      │
+      ▼
+Gate-Level Netlist
+```
+
+---
+
+## Commands Practiced
+
+### Install Icarus Verilog
 
 ```bash
 sudo apt install iverilog
 ```
 
-### Verification Command
-
-```bash
-iverilog
-```
-
-### Learning Outcome
-
-- Successfully installed Icarus Verilog.
-- Verified that the simulator was working correctly.
-- Prepared the system for Verilog compilation and simulation.
-
----
-
-# Activity 2: Installing GTKWave
-
-## Objective
-
-GTKWave is a waveform viewer used to visualize the simulation output of Verilog designs. It helps in debugging and verifying digital circuits by displaying signal waveforms.
-
-### Installation Command
+### Install GTKWave
 
 ```bash
 sudo apt install gtkwave
 ```
 
-### Verification Command
+### Verify Installation
 
 ```bash
+iverilog
 gtkwave
 ```
 
-### Learning Outcome
+### Navigate to Workspace
 
-- Successfully installed GTKWave.
-- Verified the installation by launching the application.
-- Understood the importance of waveform analysis in RTL design.
+```bash
+cd /home
+cd vsduser
+cd VSDSquadron_FM
+```
 
----
-
-# Activity 3: Linux Terminal Navigation
-
-During this session, several Linux commands were practiced to understand directory navigation and file management.
-
-| Command | Description |
-|---------|-------------|
-| `cd /home` | Navigate to the home directory |
-| `ls` | Display files and folders |
-| `cd vsduser` | Enter the user home directory |
-| `cd VSDSquadron_FM` | Open the workshop workspace |
-
----
-
-# Activity 4: Cloning the Workshop Repository
-
-The official RTL workshop repository was downloaded from GitHub using Git.
-
-### Clone Command
+### Clone Workshop Repository
 
 ```bash
 git clone https://github.com/kunalg123/sky130RTLDesignAndSynthesisWorkshop.git
 ```
 
-### Repository Verification
-
-```bash
-ls
-```
-
-The repository was successfully downloaded and stored inside the workspace directory.
-
----
-
-# Activity 5: Exploring the Repository
-
-The downloaded repository was opened and its contents were verified.
-
-### Commands Used
+### Open Repository
 
 ```bash
 cd sky130RTLDesignAndSynthesisWorkshop
-```
-
-```bash
+cd verilog_files
 ls
 ```
 
-```bash
-cd verilog_files
-```
+---
 
-The **verilog_files** directory contains the Verilog source files used during the RTL workshop.
+## Important Files
+
+| File | Purpose |
+|------|---------|
+| `.v` | Verilog Design File |
+| `tb_*.v` | Testbench File |
+| `.vcd` | Simulation Waveform File |
+| `.lib` | Standard Cell Library |
+| Netlist | Output generated after synthesis |
 
 ---
 
-# Repository Structure
+## Learning Outcomes
 
-```text
-sky130RTLDesignAndSynthesisWorkshop
-│
-├── DC_WORKSHOP
-├── lib
-├── my_lib
-├── README.md
-├── verilog_files
-└── yosys_run.sh
-```
+- Understood the RTL design flow.
+- Learned the purpose of Design and Testbench.
+- Simulated Verilog designs using Icarus Verilog.
+- Viewed waveforms using GTKWave.
+- Learned RTL synthesis using Yosys.
+- Understood the role of the Standard Cell Library and Gate-Level Netlist.
 
 ---
 
-# Commands Executed During Day 1
+## Conclusion
 
-| S.No | Command | Purpose |
-|------|---------|---------|
-| 1 | `iverilog` | Check whether Icarus Verilog is installed |
-| 2 | `sudo apt install iverilog` | Install Icarus Verilog |
-| 3 | `iverilog` | Verify successful installation |
-| 4 | `sudo apt install gtkwave` | Install GTKWave |
-| 5 | `gtkwave` | Launch GTKWave |
-| 6 | `cd /home` | Navigate to the home directory |
-| 7 | `ls` | List files and folders |
-| 8 | `cd vsduser` | Open the user home directory |
-| 9 | `cd VSDSquadron_FM` | Enter the workshop workspace |
-| 10 | `git clone https://github.com/kunalg123/sky130RTLDesignAndSynthesisWorkshop.git` | Clone the workshop repository |
-| 11 | `ls` | Verify the cloned repository |
-| 12 | `cd sky130RTLDesignAndSynthesisWorkshop` | Open the workshop repository |
-| 13 | `ls` | View repository contents |
-| 14 | `cd verilog_files` | Navigate to the Verilog source files directory |
-
----
-
-# Screenshots
-
-Include the following screenshots inside the **screenshots** folder.
-
-- Installing Icarus Verilog
-- Verifying Icarus Verilog
-- Installing GTKWave
-- Launching GTKWave
-- Linux Terminal Navigation
-- Cloning the GitHub Repository
-- Repository Contents
-- Opening the **verilog_files** Directory
-
----
-
-# Learning Outcomes
-
-After completing Day 1, I was able to:
-
-- Set up the RTL development environment on Ubuntu.
-- Install and verify Icarus Verilog.
-- Install and launch GTKWave.
-- Practice essential Linux terminal commands.
-- Clone a GitHub repository using Git.
-- Explore the workshop repository structure.
-- Prepare the environment for RTL simulation and synthesis experiments.
-
----
-
-# Conclusion
-
-Day 1 focused on building the development environment required for the RTL Design and Synthesis Workshop. The installation of Icarus Verilog and GTKWave, along with Linux terminal practice and GitHub repository setup, established a solid foundation for the practical RTL design activities in the upcoming modules.
+Day 1 introduced the complete RTL design workflow, including simulation, waveform verification, and synthesis. It provided the foundation required for implementing and verifying digital circuits in the upcoming workshop sessions.
