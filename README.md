@@ -75,14 +75,12 @@ The VSD RTL Design and Synthesis Workshop provides hands-on experience in digita
 
 ## Author
 
-**Name:** Murali
-
-**Roll Number:** 24EG104C35
-
-**Department:** Electronics and Communication Engineering (ECE)
-
-**Repository:** VSD RTL Design and Synthesis Workshop
----
+| Details | Information |
+|---------|-------------|
+| **Name** | Murali Thadisheety |
+| **Roll Number** | 24EG104C35 |
+| **Department** | Electronics and Communication Engineering (ECE) |
+| **Repository** | VSD RTL Design and Synthesis Workshop |
 
 ## Acknowledgement
 
