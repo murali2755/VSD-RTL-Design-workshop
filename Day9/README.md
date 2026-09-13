@@ -1,13 +1,6 @@
 #  Timing Analysis & Clock Tree Synthesis
 
-<p align="center">
 
-<img src="https://img.shields.io/badge/VLSI-SKY130-blue?style=for-the-badge">
-<img src="https://img.shields.io/badge/Flow-OpenLane-green?style=for-the-badge">
-<img src="https://img.shields.io/badge/STA-OpenSTA-orange?style=for-the-badge">
-<img src="https://img.shields.io/badge/CTS-TritonCTS-purple?style=for-the-badge">
-
-</p>
 
 <p align="center">
   <b>Timing Modelling • Timing Analysis • Clock Tree Synthesis • Signal Integrity</b>
