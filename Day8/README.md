@@ -1,7 +1,7 @@
 # CMOS Inverter — Fabrication, SPICE & Layout
 
 <p align="center">
-  <img src="images/FABRICATION_CMOS.png" width="800">
+  <img src="FABRICATION_CMOS.png" width="800">
 </p>
 
 <h1 align="center">CMOS Inverter</h1>
@@ -778,7 +778,7 @@ Magic can be used to:
 The following image shows the CMOS fabrication/device structure studied in this project.
 
 <p align="center">
-  <img src="images/FABRICATION_CMOS.png" width="850">
+  <img src="FABRICATION_CMOS.png" width="850">
 </p>
 
 <p align="center">
@@ -792,7 +792,7 @@ The following image shows the CMOS fabrication/device structure studied in this 
 The following image shows the physical CMOS inverter layout created using Magic.
 
 <p align="center">
-  <img src="images/LAYOUT_CMOS_INVERTER.png" width="850">
+  <img src="LAYOUT_CMOS_INVERTER.png" width="850">
 </p>
 
 <p align="center">
