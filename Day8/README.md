@@ -15,14 +15,7 @@
   SPICE analysis, switching characteristics, physical layout and verification.
 </p>
 
-<p align="center">
 
-![VLSI](https://img.shields.io/badge/Domain-VLSI-blue)
-![CMOS](https://img.shields.io/badge/Technology-CMOS-green)
-![SPICE](https://img.shields.io/badge/Simulation-SPICE-orange)
-![Magic](https://img.shields.io/badge/Layout-Magic-purple)
-
-</p>
 
 ---
 
