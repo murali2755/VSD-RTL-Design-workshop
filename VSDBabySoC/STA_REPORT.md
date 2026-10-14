@@ -195,7 +195,7 @@ The results show that all six FF corners and both TT corners meet setup timing, 
 
 **Figure 1: Setup Timing Analysis**
 
-![Setup Timing Analysis](setup_timing.png)
+![Setup Timing Analysis](setup_timing.png.png)
 
 ### 10.2 Worst Negative Slack (WNS)
 
@@ -205,7 +205,7 @@ The worst WNS is −62.563 ns at `SS_n40C_1v28`, followed by −39.697 ns at `SS
 
 **Figure 2: Worst Negative Slack (WNS)**
 
-![Worst Negative Slack](wns_timing.png)
+![Worst Negative Slack](wns_timing.png.png)
 
 ### 10.3 Total Negative Slack (TNS)
 
@@ -215,7 +215,7 @@ The most negative TNS is −13,957.588 ns at `SS_n40C_1v28`. The supplied assess
 
 **Figure 3: Total Negative Slack (TNS)**
 
-![Total Negative Slack](tns_timing.png)
+![Total Negative Slack](tns_timing.png.png)
 
 ### 10.4 Hold Timing Analysis
 
@@ -225,7 +225,7 @@ All displayed hold-slack values are positive. The minimum is 0.187 ns at `FF_n40
 
 **Figure 4: Hold Timing Analysis**
 
-![Hold Timing Analysis](hold_timing.png)
+![Hold Timing Analysis](hold_timing.png.png)
 
 ### 10.5 Overall Timing Analysis Summary
 
