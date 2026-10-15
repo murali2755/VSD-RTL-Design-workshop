@@ -6,7 +6,7 @@ VSDBabySoC is a System-on-Chip (SoC) design integrating an RVMYTH RISC-V process
 
 The objective is to understand how a Verilog design is transformed into a technology-mapped netlist and then implemented as a physical chip layout using the SKY130HD technology platform.
 
-![VSDBabySoC RTL to GDSII Flow](rtl-to-gds-flow.png)
+![VSDBabySoC RTL to GDSII Flow](VSDBabySoC RTL to GDSII Flow.png)
 
 *Complete RTL-to-GDSII flow showing the major design, implementation and verification stages.*
 
