@@ -193,7 +193,7 @@ The floorplan must accommodate the RVMYTH processor logic and the supporting mac
 
 **Screenshot – Floorplan**
 
-![VSDBabySoC Floorplan](floorplan.png)
+
 
 *Replace `floorplan.png` with the filename of your uploaded floorplan screenshot.*
 
@@ -227,14 +227,6 @@ The placement process considers cell density, estimated wirelength, timing, cong
 4. **Placement optimization:** Applies supported timing and electrical optimizations.
 
 For VSDBabySoC, placement must respect the macro locations and provide suitable routing resources for the processor logic and other blocks.
-
-**Screenshot – Global Placement**
-
-![VSDBabySoC Global Placement](routing1.png)
-
-**Screenshot – Detailed Placement**
-
-![VSDBabySoC Detailed Placement](routing2.png)
 
 ## 9. Clock Tree Synthesis (CTS)
 
@@ -273,13 +265,7 @@ The resulting layout must be checked for routing violations, disconnected nets a
 
 The routed design provides the physical interconnect needed for post-route timing analysis. Timing results depend on the routed database, constraints, selected timing libraries and the parasitic information used during analysis.
 
-**Screenshot – Global Routing**
 
-![VSDBabySoC Global Routing](routing.png)
-
-**Screenshot – Detailed Routing**
-
-![VSDBabySoC Detailed Routing](routing1.png)
 
 ## 11. Post-Route Multi-Corner Static Timing Analysis
 
