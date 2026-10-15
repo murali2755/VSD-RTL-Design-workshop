@@ -1,712 +1,169 @@
-# VSDBabySoC
+# VSDBabySoC — RTL to GDSII
 
-## 1. Introduction to VSDBabySoC
+**End-to-end ASIC Design | SKY130HD | RTL Design, Synthesis, Physical Design and Timing Analysis**
 
-VSDBabySoC is a small System-on-Chip design that combines different hardware blocks into one design. Working on this project helped me understand how a bigger RTL design is simulated and synthesized instead of working only with small Verilog modules.
+VSDBabySoC is a System-on-Chip (SoC) design integrating an RVMYTH RISC-V processor, PLL and DAC. This project documents my work from RTL simulation and synthesis through physical implementation, post-route timing analysis and the final GDSII layout stage.
 
-In this project, I explored the RTL files, performed pre-synthesis simulation, synthesized the design using Yosys, generated the gate-level netlist, and performed post-synthesis functional simulation.
+The objective is to understand how a Verilog design is transformed into a technology-mapped netlist and then implemented as a physical chip layout using the SKY130HD technology platform.
 
----
+![VSDBabySoC RTL to GDSII Flow](rtl-to-gds-flow.png)
 
-## 2. Understanding the SoC Architecture
+*Complete RTL-to-GDSII flow showing the major design, implementation and verification stages.*
 
-The VSDBabySoC design contains different blocks connected together through a top-level module.
+## Project at a Glance
 
-A simple view of the design is:
+| Item | Details |
+|---|---|
+| Design | VSDBabySoC |
+| Processor | RVMYTH RISC-V core |
+| Supporting IP | PLL and 10-bit DAC |
+| Technology | SKY130HD |
+| RTL synthesis | Yosys |
+| Simulation | Icarus Verilog and GTKWave |
+| Physical design | OpenROAD-based flow |
+| Static timing analysis | OpenSTA / OpenROAD |
+| Timing assessment | Post-route multi-corner STA across 16 PVT corners |
+| Physical verification | DRC and LVS |
+| Final layout format | GDSII |
 
-```text
-                    VSDBabySoC
-                         │
-          ┌──────────────┼──────────────┐
-          │              │              │
-       RVMYTH           PLL            DAC
-          │              │              │
-      RISC-V Core     Clocking       Output
-```
+## 1. SoC Architecture
 
-The top-level module connects these blocks and allows them to work together as a single system.
+The VSDBabySoC top-level module integrates the major functional blocks into a single system.
 
----
+- **RVMYTH:** RISC-V processor core responsible for processing instructions.
+- **PLL:** Phase-Locked Loop for clock generation.
+- **DAC:** Digital-to-Analog Converter for analog output.
+- **Top-level integration:** Connects the processor and supporting blocks through their interfaces.
 
-## 3. Main Building Blocks
+The project covers both logical implementation and the physical-design concepts needed to transform the synthesized design into a layout.
 
-### RVMYTH
+## 2. Complete RTL-to-GDSII Flow
 
-RVMYTH is the RISC-V processor core used in the design. It performs the main processing operations.
+The project is organized into three major phases.
 
-### PLL
+### Phase A — RTL to Gate-Level Simulation (GLS)
 
-PLL stands for Phase Locked Loop. It is used for clock generation in the design.
+1. RTL design exploration and hierarchy understanding.
+2. Pre-synthesis functional simulation.
+3. Logic synthesis using Yosys.
+4. SKY130HD standard-cell technology mapping.
+5. Gate-level netlist generation.
+6. Post-synthesis functional simulation using standard-cell models.
 
-### DAC
+### Phase B — Physical Design
 
-DAC stands for Digital-to-Analog Converter. It converts digital values into analog output.
+1. Floorplanning.
+2. Power planning and I/O placement.
+3. Standard-cell placement and optimization.
+4. Clock Tree Synthesis (CTS).
+5. Global routing and detailed routing.
 
-### Top Module
+### Phase C — Timing Analysis and Physical Verification
 
-The `vsdbabysoc` module acts as the top-level module and connects the different blocks together.
+1. Post-route multi-corner Static Timing Analysis.
+2. Setup and hold timing assessment.
+3. Design Rule Checking (DRC).
+4. Layout Versus Schematic (LVS).
+5. Final GDSII layout generation and verification.
 
----
+The exact completion status of each stage is documented in its corresponding README and supported by the available implementation reports and screenshots.
 
-## 4. VSDBabySoC Design Flow
+## 3. Physical Design Documentation
 
-While designing a chip, the design goes through different stages before reaching the final physical implementation.
+Explore each stage of the project below.
 
-A general ASIC flow looks like this:
+| Stage | Documentation |
+|---|---|
+| 01 | [Floorplanning](01_Floorplanning/README.md) |
+| 02 | [Power Planning and I/O Placement](02_Power_Planning/README.md) |
+| 03 | [Standard-Cell Placement](03_Placement/README.md) |
+| 04 | [Clock Tree Synthesis](04_CTS/README.md) |
+| 05 | [Global and Detailed Routing](05_Routing/README.md) |
+| 06 | [Post-Route Multi-Corner STA](06_Post_Route_STA/README.md) |
+| 07 | [Design Rule Checking (DRC)](07_DRC/README.md) |
+| 08 | [Layout Versus Schematic (LVS)](08_LVS/README.md) |
+| 09 | [GDSII Generation](09_GDSII/README.md) |
 
-```text
-Specification
-      ↓
-RTL Design
-      ↓
-Functional Verification
-      ↓
-Logic Synthesis
-      ↓
-Static Timing Analysis
-      ↓
-Floorplanning
-      ↓
-Placement
-      ↓
-Clock Tree Synthesis
-      ↓
-Routing
-      ↓
-Physical Verification
-      ↓
-GDSII
-```
+Each stage documents its underlying theory, purpose, implementation methodology, relevant commands where applicable, results and screenshots.
 
-For the VSDBabySoC work completed so far, the flow is:
+## 4. Post-Route Multi-Corner STA
 
-```text
-RTL Design
-    ↓
-Pre-Synthesis Simulation
-    ↓
-Logic Synthesis
-    ↓
-Technology Mapping
-    ↓
-Gate-Level Netlist
-    ↓
-Post-Synthesis Simulation
-```
+Post-route Static Timing Analysis evaluates timing using the implemented design, timing constraints, cell libraries and interconnect parasitics.
 
----
+My STA assessment covers **16 SKY130HD PVT corners**, including FF, SS and TT process groups.
 
-## 5. Pre-Synthesis Simulation
+The report evaluates:
 
-Before synthesizing the design, the RTL is simulated to check whether the design is working correctly.
+- Setup Worst Slack (WS), WNS and TNS.
+- Hold Worst Slack (WS), WNS and TNS.
+- Timing behavior across different process, voltage and temperature conditions.
+- Critical setup corners and the need to review unconstrained endpoints.
 
-In this stage, the original Verilog RTL files are used along with the testbench.
+The supplied report identifies `ss_n40C_1v28` as the worst setup corner, with a reported setup WS of **−28.66 ns**. The supplied hold WS values are positive across all 16 corners.
 
-The flow is:
+These results indicate that setup timing requires further investigation. Complete timing sign-off also requires verification of constraint coverage and the associated timing models.
 
-```text
-RTL Files
-   +
-Testbench
-   ↓
-Compilation
-   ↓
-Simulation
-   ↓
-Output / Waveform
-```
+**Detailed report:** [Post-Route Multi-Corner STA Report](VSDBabySoC_Post_Route_Multi_Corner_STA_Report_final.pdf)
 
-For pre-synthesis simulation, the following command was used:
+## 5. Physical Verification and GDSII
 
-```bash
-iverilog -o ./pre_synth_sim.out -DPRE_SYNTH_SIM src/module/testbench.v -I src/include -I src/module/
-```
+### Design Rule Checking (DRC)
 
-### What this command does
+DRC checks whether the layout complies with the manufacturing rules of the selected technology. The stage-specific documentation will contain the actual verification report, violation count and status.
 
-| Command                  | Purpose                                           |
-| ------------------------ | ------------------------------------------------- |
-| `iverilog`               | Compiles the Verilog files                        |
-| `-o ./pre_synth_sim.out` | Creates the simulation output file with this name |
-| `-DPRE_SYNTH_SIM`        | Defines the macro for pre-synthesis simulation    |
-| `src/module/testbench.v` | Testbench used to simulate the design             |
-| `-I src/include`         | Adds the include folder                           |
-| `-I src/module/`         | Adds the module folder                            |
+### Layout Versus Schematic (LVS)
 
-This simulation checks the RTL design before converting it into a gate-level netlist.
+LVS compares the connectivity extracted from the layout against the reference netlist. The documentation will record the actual comparison results and any reported mismatches.
 
----
+### GDSII Generation
 
-## 6. RTL Simulation Tools
+GDSII represents the physical layout geometry and layer information for downstream semiconductor manufacturing workflows. The final section documents the generated layout, output files and available verification evidence.
 
-### Icarus Verilog
+DRC-clean, LVS-correct and timing-closed status must be established from the actual reports rather than inferred from the presence of a layout file.
 
-Icarus Verilog is used to compile and simulate the Verilog design.
+## 6. VSD RTL Design Workshop — Day 1 to Day 10
 
-For example:
+This VSDBabySoC project builds upon the concepts and practical exercises completed during the VSD RTL Design Workshop. The workshop documentation covers my learning progress from Day 1 to Day 10, connecting RTL design and synthesis concepts with the physical-design implementation of VSDBabySoC.
 
-```bash
-iverilog <verilog_files>
-```
+| Workshop | Documentation |
+|---|---|
+| Day 1 | [Day 1 — RTL Design Workshop](../Day1/) |
+| Day 2 | [Day 2 — RTL Design Workshop](../Day2/) |
+| Day 3 | [Day 3 — RTL Design Workshop](../Day3/) |
+| Day 4 | [Day 4 — RTL Design Workshop](../Day4/) |
+| Day 5 | [Day 5 — RTL Design Workshop](../Day5/) |
+| Day 6 | [Day 6 — RTL Design Workshop](../Day6/) |
+| Day 7 | [Day 7 — RTL Design Workshop](../Day7/) |
+| Day 8 | [Day 8 — RTL Design Workshop](../Day8/) |
+| Day 9 | [Day 9 — RTL Design Workshop](../Day9/) |
+| Day 10 | [Day 10 — RTL Design Workshop](../Day10/) |
 
-After compilation, the generated simulation file can be executed using:
+These workshop folders document the progression of my learning, while the individual VSDBabySoC physical-design READMEs document the application of relevant concepts to the project.
 
-```bash
-vvp <simulation_output>
-```
+**Repository:** [VSD-RTL-Design-workshop](https://github.com/murali2755/VSD-RTL-Design-workshop)
 
-### GTKWave
 
-GTKWave is used to view the generated waveform.
+## 7. Key Learning Outcomes
 
-It helps us observe signals such as:
+- Understanding the architecture of a multi-block SoC.
+- Performing RTL simulation and logic synthesis.
+- Understanding technology mapping and gate-level netlists.
+- Learning the physical-design stages from floorplanning through routing.
+- Understanding clock-tree construction and timing optimization.
+- Analyzing setup and hold timing across multiple PVT corners.
+- Understanding DRC, LVS and GDSII in the ASIC implementation flow.
+- Connecting theoretical VLSI concepts with practical implementation evidence.
 
-* Clock
-* Reset
-* Inputs
-* Outputs
-* Signal changes
+## References
 
-This makes it easier to understand whether the design is behaving correctly.
+- [Reference VSDBabySoC Physical Design Flow](https://github.com/cpatilabhijith/RTL_Workspace/blob/main/VSDBabySoC/PD_flow.md)
+- [My VSD RTL Design Workshop Repository](https://github.com/murali2755/VSD-RTL-Design-workshop)
+- [OpenROAD](https://github.com/The-OpenROAD-Project/OpenROAD)
+- [OpenSTA](https://github.com/The-OpenROAD-Project/OpenSTA)
+- [SkyWater SKY130 PDK](https://github.com/google/skywater-pdk)
 
 ---
 
-## 7. Include Paths and Compilation
-
-The VSDBabySoC design contains files in different directories.
-
-Instead of putting every file path manually in the command, include paths are provided using the `-I` option.
-
-For example:
-
-```bash
--I src/include
-```
-
-This tells the compiler to search inside the `src/include` directory when required files are included.
-
-Similarly:
-
-```bash
--I src/module/
-```
-
-allows the compiler to access files inside the module directory.
-
-During post-synthesis simulation, the Sky130 standard cell models are also included.
-
-```bash
--I ../../sky130RTLDesignAndSynthesisWorkshop/my_lib/verilog_model/
-```
-
-These paths are important because the complete design contains multiple modules and dependencies.
-
----
-
-## 8. Logic Synthesis
-
-Logic synthesis converts the RTL design into a gate-level implementation.
-
-Before synthesis, we write the design using Verilog RTL.
-
-After synthesis, the same logic is represented using cells from the technology library.
-
-The basic idea is:
-
-```text
-RTL Verilog
-    ↓
-Synthesis
-    ↓
-Logic Optimization
-    ↓
-Technology Mapping
-    ↓
-Gate-Level Netlist
-```
-
-For VSDBabySoC, Yosys was used for the synthesis process.
-
----
-
-## 9. Yosys Synthesis Flow
-
-The following commands were used during synthesis.
-
-### Starting Yosys
-
-```tcl
-yosys
-```
-
-This starts the Yosys synthesis tool.
-
----
-
-### Reading the Top-Level Design
-
-```tcl
-read_verilog src/module/vsdbabysoc.v
-```
-
-This command reads the main top-level Verilog file into Yosys.
-
-The `vsdbabysoc` module connects the major blocks of the design.
-
----
-
-### Reading the RVMYTH Module
-
-```tcl
-read_verilog -I src/include src/module/rvmyth.v
-```
-
-This reads the RVMYTH processor module.
-
-The `-I src/include` option allows Yosys to find the required include files.
-
----
-
-### Reading the Clock Gate Module
-
-```tcl
-read_verilog -I src/include src/module/clk_gate.v
-```
-
-This reads the clock gate module and also provides the required include directory.
-
-After reading all the required Verilog files, Yosys understands the design hierarchy.
-
----
-
-### Selecting and Synthesizing the Top Module
-
-```tcl
-synth -top vsdbabysoc
-```
-
-This command tells Yosys that `vsdbabysoc` is the top module of the complete design.
-
-Yosys then starts synthesizing the design from this top module.
-
-During synthesis, Yosys processes the RTL and converts it into an internal logic representation.
-
----
-
-### Mapping Flip-Flops
-
-```tcl
-dfflibmap -liberty src/lib/sky130_fd_sc_hd__tt_025C_1v80.lib
-```
-
-This command maps the flip-flops and other sequential elements in the design to cells available in the Sky130 standard cell library.
-
-In simple terms:
-
-```text
-RTL Flip-Flop
-      ↓
-dfflibmap
-      ↓
-Sky130 Flip-Flop Cell
-```
-
----
-
-### Technology Mapping using ABC
-
-```tcl
-abc -liberty src/lib/sky130_fd_sc_hd__tt_025C_1v80.lib
-```
-
-The `abc` command maps the combinational logic into standard cells available in the Sky130 library.
-
-For example, logic operations such as:
-
-* AND
-* OR
-* NAND
-* NOR
-* Inverters
-
-are mapped to actual cells from the technology library.
-
-This is an important step because it changes generic logic into technology-specific logic.
-
----
-
-### Replacing Undefined Values
-
-```tcl
-setundef -zero
-```
-
-Sometimes the design may contain undefined values.
-
-This command replaces undefined values with logic `0`.
-
-This helps clean the synthesized design and avoids unknown values in the generated logic.
-
----
-
-### Cleaning the Design
-
-```tcl
-clean -purge
-```
-
-This command removes unused cells and unnecessary connections from the design.
-
-The command was used twice:
-
-```tcl
-clean -purge
-clean -purge
-```
-
-The purpose is to make sure unnecessary objects are removed after synthesis and mapping operations.
-
----
-
-### Renaming Generated Objects
-
-```tcl
-rename -enumerate
-```
-
-During synthesis, Yosys may generate internal names that are difficult to read.
-
-This command renames objects in an organized enumerated format.
-
-It makes the generated design and netlist easier to handle.
-
----
-
-## 10. Sky130 Standard Cell Library
-
-A standard cell library is needed to map the RTL design into actual technology cells.
-
-For this project, Sky130 libraries were used.
-
-The following libraries were read:
-
-### PLL Library
-
-```tcl
-read_liberty -lib src/lib/avsdpll.lib
-```
-
-This reads the Liberty file related to the PLL block.
-
----
-
-### DAC Library
-
-```tcl
-read_liberty -lib src/lib/avsddac.lib
-```
-
-This reads the Liberty file related to the DAC block.
-
----
-
-### Sky130 Standard Cell Library
-
-```tcl
-read_liberty -lib src/lib/sky130_fd_sc_hd__tt_025C_1v80.lib
-```
-
-This reads the main Sky130 standard cell library.
-
-The library contains cells required for technology mapping such as:
-
-* Logic gates
-* Buffers
-* Inverters
-* Flip-Flops
-
-The general flow is:
-
-```text
-RTL Design
-    ↓
-Yosys
-    ↓
-Sky130 Libraries
-    ↓
-Technology Mapping
-    ↓
-Gate-Level Design
-```
-
----
-
-## 11. Gate-Level Netlist Generation
-
-After the synthesis and technology mapping steps, the RTL design is converted into a gate-level representation.
-
-The generated design contains standard cells instead of high-level RTL statements.
-
-The transformation can be understood as:
-
-```text
-RTL Design
-│
-├── always blocks
-├── assign statements
-└── Verilog logic
-
-        ↓
-
-      Synthesis
-
-        ↓
-
-Gate-Level Netlist
-│
-├── Standard Cells
-├── Flip-Flops
-├── Logic Gates
-└── Interconnections
-```
-
-After synthesis, the design is flattened into a gate-level representation where the logic hierarchy is converted into technology-mapped cells.
-
-This netlist is then used for post-synthesis simulation.
-
----
-
-## 12. Post-Synthesis Simulation
-
-After synthesis, the gate-level netlist is simulated again.
-
-This is called post-synthesis simulation.
-
-Unlike pre-synthesis simulation, this stage does not use only the original RTL logic. The synthesized netlist and standard cell models are used.
-
-The flow is:
-
-```text
-Testbench
-    +
-Gate-Level Netlist
-    +
-Sky130 Standard Cell Models
-    ↓
-Icarus Verilog
-    ↓
-Post-Synthesis Simulation
-```
-
-The command used was:
-
-```bash
-sudo iverilog -DPOST_SYNTH_SIM -DFUNCTIONAL \
--I src/include/ \
--I ../../sky130RTLDesignAndSynthesisWorkshop/my_lib/verilog_model/ \
--I src/module/ \
-src/module/testbench.v
-```
-
-This checks whether the synthesized design works correctly after technology mapping.
-
----
-
-## 13. Understanding POST_SYNTH_SIM
-
-The following option is used:
-
-```bash
--DPOST_SYNTH_SIM
-```
-
-The `-D` option defines a macro during compilation.
-
-So:
-
-```bash
--DPOST_SYNTH_SIM
-```
-
-allows the Verilog code to identify that post-synthesis simulation is being performed.
-
-The code can use conditional compilation like this:
-
-```verilog
-`ifdef POST_SYNTH_SIM
-
-    // Post-synthesis configuration
-
-`else
-
-    // Pre-synthesis configuration
-
-`endif
-```
-
-This helps the same testbench or design setup work differently depending on whether RTL simulation or post-synthesis simulation is being performed.
-
----
-
-## 14. Understanding FUNCTIONAL
-
-The following option is used during post-synthesis simulation:
-
-```bash
--DFUNCTIONAL
-```
-
-The synthesized design contains Sky130 standard cells.
-
-These cells have Verilog models used during simulation.
-
-The `FUNCTIONAL` macro enables the functional behavior of these standard cell models.
-
-The main purpose is to check the logical functionality of the synthesized design.
-
-In simple terms:
-
-```text
-RTL Design
-    ↓
-Synthesis
-    ↓
-Standard Cells
-    ↓
-Functional Cell Models
-    ↓
-Simulation
-```
-
----
-
-## 15. Complete Simulation and Synthesis Flow
-
-The complete flow followed in this project is:
-
-```text
-                    VSDBabySoC
-                         │
-                         ▼
-                 RTL Design Files
-                         │
-                         ▼
-              Pre-Synthesis Simulation
-                         │
-                         ▼
-              RTL Functional Check
-                         │
-                         ▼
-                    Yosys
-                         │
-              ┌──────────┼──────────┐
-              │          │          │
-              ▼          ▼          ▼
-          Read RTL   Read Libs   Top Module
-                         │
-                         ▼
-                     Synthesis
-                         │
-                         ▼
-                    dfflibmap
-                         │
-                         ▼
-                       abc
-                         │
-                         ▼
-                 Technology Mapping
-                         │
-                         ▼
-                  Gate-Level Netlist
-                         │
-                         ▼
-              Post-Synthesis Simulation
-                         │
-              ┌──────────┼──────────┐
-              │          │          │
-     POST_SYNTH_SIM  FUNCTIONAL  Sky130 Models
-                         │
-                         ▼
-                Functional Verification
-```
-
-### Commands Used During the Flow
-
-```tcl
-yosys
-
-read_verilog src/module/vsdbabysoc.v
-
-read_verilog -I src/include src/module/rvmyth.v
-
-read_verilog -I src/include src/module/clk_gate.v
-
-read_liberty -lib src/lib/avsdpll.lib
-
-read_liberty -lib src/lib/avsddac.lib
-
-read_liberty -lib src/lib/sky130_fd_sc_hd__tt_025C_1v80.lib
-
-synth -top vsdbabysoc
-
-dfflibmap -liberty src/lib/sky130_fd_sc_hd__tt_025C_1v80.lib
-
-abc -liberty src/lib/sky130_fd_sc_hd__tt_025C_1v80.lib
-
-setundef -zero
-
-clean -purge
-
-clean -purge
-
-rename -enumerate
-
-stat
-```
-
-### What `stat` Does
-
-```tcl
-stat
-```
-
-The `stat` command displays statistics about the synthesized design.
-
-It helps us see information such as:
-
-* Number of cells
-* Types of cells
-* Number of wires
-* Design hierarchy information
-
-This gives a quick summary of the synthesized design after the synthesis flow.
-
----
-
-## 16. Learning Outcomes
-
-Through the VSDBabySoC project, I understood how a larger RTL design moves through the initial stages of the ASIC design flow.
-
-The main things I learned are:
-
-* Understanding the architecture of a multi-module SoC
-* Identifying the top module and different IP blocks
-* Performing pre-synthesis simulation
-* Using Icarus Verilog for RTL compilation and simulation
-* Using GTKWave to observe simulation results
-* Working with include paths
-* Reading multiple Verilog files in Yosys
-* Reading Liberty files
-* Selecting the top module for synthesis
-* Understanding the `synth` command
-* Mapping sequential logic using `dfflibmap`
-* Mapping combinational logic using `abc`
-* Using Sky130 standard cell libraries
-* Cleaning and organizing the synthesized design
-* Understanding gate-level representation
-* Generating and analyzing the synthesized design
-* Using `stat` to view synthesis statistics
-* Performing post-synthesis simulation
-* Understanding `POST_SYNTH_SIM`
-* Understanding `FUNCTIONAL`
-* Comparing RTL-level and synthesized-level functionality
+**Project:** VSDBabySoC — RTL to GDSII  
+**Technology:** SKY130HD  
+**Focus:** RTL Design, Gate-Level Simulation, Physical Design, Multi-Corner STA and Physical Verification
